@@ -55,6 +55,27 @@ model Token {
   @@unique([hashedToken, type])
 }
 
+model Ingredient {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  energy    Int?
+  category  String?
+  isCooked  Boolean?
+  isAlcohol Boolean?
+  carbs     Float?
+  fat       Float?
+  proteins  Float?
+  calcium   Float?
+  iron      Float?
+  magnesium Float?
+  sodium    Float?
+  potassium Float?
+  vitaminD  Float?
+  zinc      Float?
+}
+
 // NOTE: It's highly recommended to use an enum for the token type
 //       but enums only work in Postgres.
 //       See: https://blitzjs.com/docs/database-overview#switch-to-postgresql
