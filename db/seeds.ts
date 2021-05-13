@@ -1,43 +1,45 @@
-import db from "./index"
-import * as faker from "faker"
+import { userSeed } from "./seeds/userSeed"
+import { ingredientSeed } from "./seeds/ingredientSeed"
+import { recipeSeed } from "./seeds/recipeSeed"
+import { recipeIngredientSeed } from "./seeds/recipeIngredientSeed"
+
 /*
- * This seed function is executed when you run `blitz db seed`.
- *
- * Probably you want to use a library like https://chancejs.com
- * or https://github.com/Marak/Faker.js to easily generate
- * realistic data.
+ * This seed function is executed when you run `blitz db seed`
  */
 const seed = async () => {
-  /*
-   * 1 - clean DB
-   */
-  await cleanDB()
-  /*
-   * 2 - create Users
-   */
-  for (let i = 0; i < 10; i++) {
-    await db.user.create({
-      data: {
-        name: faker.name.firstName(),
-        email: faker.internet.email(),
-      },
-    })
-  }
-  console.log("🔥 users created")
-}
+  /* --------------------------------------------------------------
+  * 0 - if you need to reset the db run `blitz prisma migrate reset`
+  ----------------------------------------------------------------- */
 
-const cleanDB = async () => {
-  await db.user.deleteMany()
-  await db.session.deleteMany()
-  await db.token.deleteMany()
-  await db.ingredient.deleteMany()
-  await db.recipe.deleteMany()
-  await db.recipeIngredient.deleteMany()
-  await db.recipeTag.deleteMany()
-  await db.recipeUpvote.deleteMany()
-  await db.week.deleteMany()
-  await db.day.deleteMany()
-  console.log("👌 db cleaned up")
+  enum numberToGenerate {
+    USERS = 10,
+    INGREDIENTS = 30,
+    RECIPES = 50,
+    RECIPE_INGREDIENTS_PER_RECIPE = 5,
+    RECIPE_TAGS = 30,
+    RECIPE_TAGS_PER_RECIPE = 2,
+    RECIPE_UPVOTES = 0,
+    WEEKS_PER_USER = 3,
+  }
+
+  console.log("🔥  --   seed started")
+
+  /* --------------------------------------------------------------
+   * 1 - create Users
+  ----------------------------------------------------------------- */
+  await userSeed(numberToGenerate.USERS)
+  /* --------------------------------------------------------------
+   * 2 - create Ingredients
+  ----------------------------------------------------------------- */
+  await ingredientSeed(numberToGenerate.INGREDIENTS)
+  /* --------------------------------------------------------------
+   * 3 - create Recipes
+  ----------------------------------------------------------------- */
+  await recipeSeed(numberToGenerate.RECIPES)
+  /* --------------------------------------------------------------
+   * 4 - create RecipeIngredients
+  ----------------------------------------------------------------- */
+  await recipeIngredientSeed(numberToGenerate.RECIPE_INGREDIENTS_PER_RECIPE)
 }
 
 export default seed
