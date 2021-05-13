@@ -1,5 +1,5 @@
 import db from "./index"
-
+import * as faker from "faker"
 /*
  * This seed function is executed when you run `blitz db seed`.
  *
@@ -11,10 +11,19 @@ const seed = async () => {
   /*
    * 1 - clean DB
    */
-  cleanDB()
+  await cleanDB()
   /*
    * 2 - create Users
    */
+  for (let i = 0; i < 10; i++) {
+    await db.user.create({
+      data: {
+        name: faker.name.firstName(),
+        email: faker.internet.email(),
+      },
+    })
+  }
+  console.log("🔥 users created")
 }
 
 const cleanDB = async () => {
@@ -28,7 +37,7 @@ const cleanDB = async () => {
   await db.recipeUpvote.deleteMany()
   await db.week.deleteMany()
   await db.day.deleteMany()
-  console.log("db cleaned up")
+  console.log("👌 db cleaned up")
 }
 
 export default seed
