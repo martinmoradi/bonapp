@@ -62,20 +62,20 @@ model Ingredient {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @unique
-  energy    Int?
+  energy    Int?     @default(0)
   category  String?
-  isCooked  Boolean?
-  isAlcohol Boolean?
-  carbs     Float?
-  fat       Float?
-  proteins  Float?
-  calcium   Float?
-  iron      Float?
-  magnesium Float?
-  sodium    Float?
-  potassium Float?
-  vitaminD  Float?
-  zinc      Float?
+  isCooked  Boolean? @default(false)
+  isAlcohol Boolean? @default(false)
+  carbs     Float?   @default(0)
+  fat       Float?   @default(0)
+  proteins  Float?   @default(0)
+  calcium   Float?   @default(0)
+  iron      Float?   @default(0)
+  magnesium Float?   @default(0)
+  sodium    Float?   @default(0)
+  potassium Float?   @default(0)
+  vitaminD  Float?   @default(0)
+  zinc      Float?   @default(0)
 }
 
 model Recipe {
@@ -83,14 +83,14 @@ model Recipe {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   name         String   @unique
-  servings     Int
-  image        String
-  prepTime     Int?
-  cookTime     Int?
-  activeTime   Int?
-  inactiveTime Int?
-  readyTime    Int?
-  totalTime    Int
+  servings     Int      @default(1)
+  image        String?
+  prepTime     Int?     @default(0)
+  cookTime     Int?     @default(0)
+  activeTime   Int?     @default(0)
+  inactiveTime Int?     @default(0)
+  readyTime    Int?     @default(0)
+  totalTime    Int      @default(0)
 
   recipeIngredients RecipeIngredient[]
   recipeTags        RecipeTag[]
@@ -131,7 +131,7 @@ model Week {
   id         Int       @id @default(autoincrement())
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  weekNumber Int
+  weekNumber Int       @default(0)
   startDate  DateTime?
   endDate    DateTime?
 
