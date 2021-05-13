@@ -40,6 +40,9 @@ const seed = async () => {
    * 4 - create RecipeIngredients
   ----------------------------------------------------------------- */
   await recipeIngredientSeed(numberToGenerate.RECIPE_INGREDIENTS_PER_RECIPE)
+  /* --------------------------------------------------------------
+   * 4 - create RecipeTags
+  ----------------------------------------------------------------- */
 }
 
 export default seed

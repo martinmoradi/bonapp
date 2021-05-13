@@ -10,51 +10,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// --------------------------------------
+// -------------------------------------
+// ** schema is sorted alphabetically **
 
-model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  name           String?
-  email          String   @unique
-  hashedPassword String?
-  role           String   @default("USER")
+model Day {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  date      DateTime
 
-  tokens         Token[]
-  sessions       Session[]
-  weeks          Week[]
-  recipesUpvotes RecipeUpvote[]
-}
-
-model Session {
-  id                 Int       @id @default(autoincrement())
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  expiresAt          DateTime?
-  handle             String    @unique
-  hashedSessionToken String?
-  antiCSRFToken      String?
-  publicData         String?
-  privateData        String?
-
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
-}
-
-model Token {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  hashedToken String
-  type        TokenType
-  expiresAt   DateTime
-  sentTo      String
-
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-
-  @@unique([hashedToken, type])
+  Week   Week @relation(fields: [weekId], references: [id])
+  weekId Int
 }
 
 model Ingredient {
@@ -92,9 +58,12 @@ model Recipe {
   readyTime    Int?     @default(0)
   totalTime    Int      @default(0)
 
-  recipeIngredients RecipeIngredient[]
-  recipeTags        RecipeTag[]
-  recipeUpvotes     RecipeUpvote[]
+  recipeIngredients   RecipeIngredient[]
+  recipeTags          RecipeTag[]
+  recipeUpvotes       RecipeUpvote[]
+  User                User                  @relation(fields: [userId], references: [id])
+  userId              Int
+  RecipeTagsOnRecipes RecipeTagsOnRecipes[]
 }
 
 model RecipeIngredient {
@@ -103,8 +72,8 @@ model RecipeIngredient {
   updatedAt DateTime @updatedAt
   content   String
 
-  Recipe   Recipe? @relation(fields: [recipeId], references: [id])
-  recipeId Int?
+  Recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipeId Int
 }
 
 model RecipeTag {
@@ -113,7 +82,17 @@ model RecipeTag {
   updatedAt DateTime @updatedAt
   name      String
 
-  recipes Recipe[]
+  recipes             Recipe[]
+  RecipeTagsOnRecipes RecipeTagsOnRecipes[]
+}
+
+model RecipeTagsOnRecipes {
+  recipe      Recipe    @relation(fields: [recipeId], references: [id])
+  recipeId    Int
+  recipeTag   RecipeTag @relation(fields: [recipeTagId], references: [id])
+  recipeTagId Int
+
+  @@id([recipeId, recipeTagId])
 }
 
 model RecipeUpvote {
@@ -121,10 +100,56 @@ model RecipeUpvote {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Recipe   Recipe? @relation(fields: [recipeId], references: [id])
-  recipeId Int?
-  User     User?   @relation(fields: [userId], references: [id])
-  userId   Int?
+  Recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipeId Int
+  User     User   @relation(fields: [userId], references: [id])
+  userId   Int
+}
+
+model Session {
+  id                 Int       @id @default(autoincrement())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  expiresAt          DateTime?
+  handle             String    @unique
+  hashedSessionToken String?
+  antiCSRFToken      String?
+  publicData         String?
+  privateData        String?
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+model Token {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  hashedToken String
+  type        TokenType
+  expiresAt   DateTime
+  sentTo      String
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@unique([hashedToken, type])
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  name           String?
+  email          String   @unique
+  hashedPassword String?
+  role           String   @default("USER")
+
+  tokens         Token[]
+  sessions       Session[]
+  weeks          Week[]
+  recipesUpvotes RecipeUpvote[]
+  recipes        Recipe[]
 }
 
 model Week {
@@ -136,18 +161,8 @@ model Week {
   endDate    DateTime?
 
   days   Day[]
-  User   User? @relation(fields: [userId], references: [id])
-  userId Int?
-}
-
-model Day {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  date      DateTime
-
-  Week   Week? @relation(fields: [weekId], references: [id])
-  weekId Int?
+  User   User  @relation(fields: [userId], references: [id])
+  userId Int
 }
 
 // NOTE: It's highly recommended to use an enum for the token type
