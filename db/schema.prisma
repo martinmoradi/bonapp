@@ -76,6 +76,21 @@ model Ingredient {
   zinc      Float?
 }
 
+model Recipe {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String   @unique
+  servings     Int
+  image        String
+  prepTime     Int?
+  cookTime     Int?
+  activeTime   Int?
+  inactiveTime Int?
+  readyTime    Int?
+  totalTime    Int
+}
+
 // NOTE: It's highly recommended to use an enum for the token type
 //       but enums only work in Postgres.
 //       See: https://blitzjs.com/docs/database-overview#switch-to-postgresql
