@@ -21,8 +21,10 @@ model User {
   hashedPassword String?
   role           String   @default("USER")
 
-  tokens   Token[]
-  sessions Session[]
+  tokens         Token[]
+  sessions       Session[]
+  weeks          Week[]
+  recipesUpvotes RecipeUpvote[]
 }
 
 model Session {
@@ -89,6 +91,10 @@ model Recipe {
   inactiveTime Int?
   readyTime    Int?
   totalTime    Int
+
+  recipeIngredients RecipeIngredient[]
+  recipeTags        RecipeTag[]
+  recipeUpvotes     RecipeUpvote[]
 }
 
 model RecipeIngredient {
@@ -96,6 +102,9 @@ model RecipeIngredient {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   content   String
+
+  Recipe   Recipe? @relation(fields: [recipeId], references: [id])
+  recipeId Int?
 }
 
 model RecipeTag {
@@ -103,12 +112,19 @@ model RecipeTag {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String
+
+  recipes Recipe[]
 }
 
-model RecipeTagsOnRecipes {
+model RecipeUpvote {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  Recipe   Recipe? @relation(fields: [recipeId], references: [id])
+  recipeId Int?
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   Int?
 }
 
 model Week {
@@ -118,6 +134,10 @@ model Week {
   weekNumber Int
   startDate  DateTime?
   endDate    DateTime?
+
+  days   Day[]
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
 }
 
 model Day {
@@ -125,6 +145,9 @@ model Day {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   date      DateTime
+
+  Week   Week? @relation(fields: [weekId], references: [id])
+  weekId Int?
 }
 
 // NOTE: It's highly recommended to use an enum for the token type
