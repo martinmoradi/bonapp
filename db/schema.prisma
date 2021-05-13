@@ -111,6 +111,15 @@ model RecipeTagsOnRecipes {
   updatedAt DateTime @updatedAt
 }
 
+model Week {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  weekNumber Int
+  startDate  DateTime?
+  endDate    DateTime?
+}
+
 // NOTE: It's highly recommended to use an enum for the token type
 //       but enums only work in Postgres.
 //       See: https://blitzjs.com/docs/database-overview#switch-to-postgresql
