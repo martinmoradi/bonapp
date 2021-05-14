@@ -10,19 +10,89 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// --------------------------------------
+// -------------------------------------
+// ** schema is sorted alphabetically **
 
-model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  name           String?
-  email          String   @unique
-  hashedPassword String?
-  role           String   @default("USER")
+model Day {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  date      DateTime
 
-  tokens   Token[]
-  sessions Session[]
+  Week   Week? @relation(fields: [weekId], references: [id])
+  weekId Int?
+}
+
+model Ingredient {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String   @unique
+  energy    Int?     @default(0)
+  category  String?
+  isCooked  Boolean? @default(false)
+  isAlcohol Boolean? @default(false)
+  carbs     Float?   @default(0)
+  fat       Float?   @default(0)
+  proteins  Float?   @default(0)
+  calcium   Float?   @default(0)
+  iron      Float?   @default(0)
+  magnesium Float?   @default(0)
+  sodium    Float?   @default(0)
+  potassium Float?   @default(0)
+  vitaminD  Float?   @default(0)
+  zinc      Float?   @default(0)
+}
+
+model Recipe {
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  servings     Int      @default(1)
+  image        String?
+  prepTime     Int?     @default(0)
+  cookTime     Int?     @default(0)
+  activeTime   Int?     @default(0)
+  inactiveTime Int?     @default(0)
+  readyTime    Int?     @default(0)
+  totalTime    Int      @default(0)
+
+  recipeIngredients RecipeIngredient[]
+  recipeTags        RecipeTag[]
+  recipeUpvotes     RecipeUpvote[]
+  author            User?              @relation(fields: [authorId], references: [id])
+  authorId          Int?
+}
+
+model RecipeIngredient {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String
+
+  Recipe   Recipe? @relation(fields: [recipeId], references: [id])
+  recipeId Int?
+}
+
+model RecipeTag {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+
+  recipes Recipe[]
+}
+
+model RecipeUpvote {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Recipe   Recipe? @relation(fields: [recipeId], references: [id])
+  recipeId Int?
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   Int?
 }
 
 model Session {
@@ -55,9 +125,35 @@ model Token {
   @@unique([hashedToken, type])
 }
 
-// NOTE: It's highly recommended to use an enum for the token type
-//       but enums only work in Postgres.
-//       See: https://blitzjs.com/docs/database-overview#switch-to-postgresql
+model User {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  name           String?
+  email          String   @unique
+  hashedPassword String?
+  role           String   @default("USER")
+
+  tokens         Token[]
+  sessions       Session[]
+  weeks          Week[]
+  recipesUpvotes RecipeUpvote[]
+  recipes        Recipe[]
+}
+
+model Week {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  weekNumber Int       @default(0)
+  startDate  DateTime?
+  endDate    DateTime?
+
+  days   Day[]
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
 enum TokenType {
   RESET_PASSWORD
 }
