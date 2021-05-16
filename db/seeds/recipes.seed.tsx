@@ -1,4 +1,4 @@
-import { range, sample, times } from "./tools"
+import { range, sample, times } from "../../app/tools"
 import * as faker from "faker"
 import { RecipeSeed } from "db/types"
 

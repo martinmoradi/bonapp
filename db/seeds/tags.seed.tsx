@@ -1,6 +1,6 @@
 import db from "db"
 import * as faker from "faker"
-import { sample } from "./tools"
+import { sample } from "../../app/tools"
 
 export const tagSeed = async (
   tagsCount: number,
