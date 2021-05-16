@@ -1,24 +1,25 @@
 import { UserRole, MembershipName, MembershipRole } from ".prisma/client"
 import db from "db"
 import * as faker from "faker"
-import { recipeSeed } from "./recipes.seed"
+import { recipeFactory } from "./recipes.factory"
 
 export const consumerSeed = async (
-  accountsCount: number,
-  recipesCount: number,
-  ingredientsCount: number
+  accountsToGenerate: number,
+  recipesToGenerate: number,
+  ingredientsToGenerate: number
 ) => {
   console.log(
-    `🟡  --   creating ${accountsCount} consumers accounts with ${recipesCount} recipes...`
+    `🟡  --   creating ${accountsToGenerate} consumers accounts and ${recipesToGenerate} recipes for each...`
   )
 
+  // Set to guarantee unique ids
   const consumerMails: Set<string> = new Set()
-  while (consumerMails.size < accountsCount) {
+  while (consumerMails.size < accountsToGenerate) {
     consumerMails.add(faker.internet.email().toLowerCase())
   }
 
-  for (let i = 0; i < accountsCount; i++) {
-    const recipes = await recipeSeed(recipesCount, ingredientsCount)
+  for (let i = 0; i < accountsToGenerate; i++) {
+    const recipes = recipeFactory(recipesToGenerate, ingredientsToGenerate)
     await db.user.create({
       data: {
         email: [...consumerMails][i],

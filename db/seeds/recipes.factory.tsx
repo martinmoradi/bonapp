@@ -1,9 +1,9 @@
 import { range, sample, times } from "../../app/tools"
 import * as faker from "faker"
-import { RecipeSeed } from "db/types"
+import { RecipeFactory } from "db/types"
 
-export const recipeSeed = async (recipesToGenerate: number, ingredientsToGenerate: number) => {
-  const recipes: RecipeSeed[] = []
+export const recipeFactory = (recipesToGenerate: number, ingredientsToGenerate: number) => {
+  const recipes: RecipeFactory[] = []
   for (let i = 0; i < recipesToGenerate; i++) {
     // storing random times in an array allow totalTime to be calculated
     const timers = times(5).map(() => sample([2, 5, 10, 15, 20]))

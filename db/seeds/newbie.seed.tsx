@@ -2,7 +2,7 @@ import { UserRole, MembershipName, MembershipRole } from ".prisma/client"
 import db from "db"
 
 export const newbieSeed = async () => {
-  console.log("🟡  --   creating newbie account with 0 recipes...")
+  console.log("🟡  --   creating newbie fresh account")
 
   await db.user.create({
     data: {
