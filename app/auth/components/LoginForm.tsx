@@ -2,7 +2,7 @@ import { AuthenticationError, Link, useMutation, Routes } from "blitz"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import login from "app/auth/mutations/login"
-import { Login } from "app/auth/validations"
+import { Login } from "../validations"
 
 type LoginFormProps = {
   onSuccess?: () => void

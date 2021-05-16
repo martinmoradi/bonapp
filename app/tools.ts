@@ -3,9 +3,9 @@ export function sample<T>(array: T[]): T {
   return array[randomIndex]
 }
 
-export function range(start: number, end: boolean | number = false) {
+export function range(start: number, end?: number) {
   const numbers: number[] = []
-  if (end === false) {
+  if (!end) {
     for (let i = 0; i < start; i++) {
       numbers.push(i)
     }
